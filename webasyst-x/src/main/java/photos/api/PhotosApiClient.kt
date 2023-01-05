@@ -15,13 +15,12 @@ class PhotosApiClient (
 ) {
     override val appName get() = SCOPE
 
-    suspend fun getPhotos(): Response<PhotosDTO> = apiRequest {
-        return client.doGet("$urlBase/api.php/photos.photo.getList") {
+    suspend fun getPhotos(): Response<PhotosDTO> =
+        client.doGet("$urlBase/api.php/photos.photo.getList") {
             headers {
                 accept(ContentType.Application.Json)
             }
         }
-    }
 
     companion object {
         const val SCOPE = "photos"

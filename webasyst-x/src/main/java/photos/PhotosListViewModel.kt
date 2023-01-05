@@ -19,6 +19,7 @@ import com.webasyst.x.util.ConnectivityUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import com.webasyst.auth.withFreshAccessToken
 
 class PhotosListViewModel(
     app: Application,
@@ -35,6 +36,9 @@ class PhotosListViewModel(
         .instanceForInstallation(Installation(installationId, installationUrl))
     }
 
+    val mAuthService by lazy {
+        getApplication<WebasystXApplication>().webasystAuthService
+    }
 
     init {
         val connectivityUtil = ConnectivityUtil(getApplication())
@@ -75,24 +79,31 @@ class PhotosListViewModel(
         }
         mutableState.postValue(STATE_LOADING_DATA)
 
-        mPhotosApiClient?.run {
-            getPhotos()
-                .onSuccess {
-                    _error.postValue(null)
-                    mutableState.postValue(if (it.photos.isEmpty()) STATE_DATA_EMPTY else STATE_DATA_READY)
-                    val baseUrl = installationUrl ?: ""
-                    mutablePhotoList.postValue(it.photos.map {
-                            dto -> Photo(
+        try {
+            mAuthService.withFreshAccessToken{ _ ->
+                mPhotosApiClient?.run {
+                getPhotos()
+                    .onSuccess {
+                        _error.postValue(null)
+                        mutableState.postValue(if (it.photos.isEmpty()) STATE_DATA_EMPTY else STATE_DATA_READY)
+                        val baseUrl = installationUrl ?: ""
+                        mutablePhotoList.postValue(it.photos.map { dto ->
+                            Photo(
                                 id = dto.id,
                                 fullName = dto.name + dto.ext,
                                 imageUrl = baseUrl + dto.imageUrl
                             )
-                    })
+                        })
+                    }
+                    .onFailure {
+                        _error.postValue(it)
+                        mutableState.postValue(STATE_ERROR)
+                    }
                 }
-                .onFailure {
-                    _error.postValue(it)
-                    mutableState.postValue(STATE_ERROR)
-                }
+            }
+        } catch (refreshException: Throwable){
+            _error.postValue(refreshException)
+            mutableState.postValue(STATE_ERROR)
         }
     }
 
