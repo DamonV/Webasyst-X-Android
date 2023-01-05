@@ -13,4 +13,9 @@
         android:id="@+id/shop"
         android:icon="@drawable/ic_shop"
         android:title="@string/app_shop" />
+
+    <item
+        android:id="@+id/photos"
+        android:icon="@drawable/ic_photos"
+        android:title="@string/app_photos" />
 </menu>

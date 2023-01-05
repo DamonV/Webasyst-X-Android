@@ -15,6 +15,7 @@ import com.webasyst.x.R
 import com.webasyst.x.blog.BlogRootFragment
 import com.webasyst.x.databinding.FragMainBinding
 import com.webasyst.x.intro.LoadingFragment
+import com.webasyst.x.photos.PhotoListFragment
 import com.webasyst.x.shop.orders.OrderListFragment
 import com.webasyst.x.site.domainlist.DomainListFragment
 
@@ -49,7 +50,7 @@ class MainFragment : Fragment() {
 
         binding.bottomNav.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.site, R.id.shop, R.id.blog -> {
+                R.id.site, R.id.shop, R.id.blog, R.id.photos -> {
                     onTabChange(item.itemId)
                     true
                 }
@@ -106,6 +107,11 @@ class MainFragment : Fragment() {
             R.id.site -> initDomainsFragment()
             R.id.shop -> initShopFragment()
             R.id.blog -> initBlogFragment()
+
+            R.id.photos -> PhotoListFragment.newInstance().apply {
+                arguments = Bundle().apply {
+                putSerializable(INSTALLATION, args.installation)
+            }}
             else -> throw IllegalArgumentException("Tab not found")
         }
         loadFragment(fragment)

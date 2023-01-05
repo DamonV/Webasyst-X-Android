@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Webasyst X</string>
+    <string name="app_name">VDV Webasyst X</string>
     <string name="webasyst">Webasyst</string>
     <string name="installation_insecure_connection">Insecure connection</string>
     <string name="app_name_placeholder">My App</string>
@@ -49,6 +49,7 @@
     <string name="error_details_title_response_body">Server response</string>
 
     <string name="app_shop">Store</string>
+    <string name="app_photos">Photos</string>
 
     <string name="app_blog">Blog</string>
     <string name="app_blog_no_posts">No posts</string>

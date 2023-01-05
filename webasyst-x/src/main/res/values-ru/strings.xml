@@ -48,6 +48,7 @@
     <string name="error_details_title_response_body">Ответ сервера</string>
 
     <string name="app_shop">Магазин</string>
+    <string name="app_photos">Фото</string>
 
     <string name="app_blog">Блог</string>
     <string name="app_blog_no_posts">Нет записей</string>

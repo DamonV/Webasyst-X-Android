@@ -23,6 +23,8 @@ import com.webasyst.x.common.InstallationListStore
 import com.webasyst.x.common.XComponentProvider
 import com.webasyst.x.installations.InstallationsController
 import com.webasyst.x.intro.GithubFragment
+import com.webasyst.x.photos.api.PhotosApiClient
+import com.webasyst.x.photos.api.PhotosApiClientFactory
 import com.webasyst.x.util.TokenCacheImpl
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.android.Android
@@ -42,12 +44,14 @@ class WebasystXApplication : Application(), WebasystAuthStateStore.Observer, XCo
             setHost(BuildConfig.WEBASYST_HOST)
             setCallbackUri(BuildConfig.APPLICATION_ID + "://oidc_callback")
             setScope(webasystScope())
+            setDeviceId("test")
         }
 
         WebasystAuthStateStore.getInstance(this).addObserver(this)
     }
 
     override fun webasystScope() = listOf(
+        PhotosApiClient.SCOPE,
         SiteApiClient.SCOPE,
         ShopApiClient.SCOPE,
         BlogApiClient.SCOPE,
@@ -79,6 +83,9 @@ class WebasystXApplication : Application(), WebasystAuthStateStore.Observer, XCo
 
     private val apiClient_: ApiClient by lazy {
         ApiClient {
+            addModuleFactory(PhotosApiClient::class.java) { config, waidAuthenticator ->
+                PhotosApiClientFactory(config, waidAuthenticator)
+            }
             addModuleFactory(BlogApiClient::class.java) { config, waidAuthenticator ->
                 BlogApiClientFactory(config, waidAuthenticator)
             }
